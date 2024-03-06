@@ -12,14 +12,14 @@ export interface IUser extends Document {
 }
 
 const userSchema = new Schema({
-  clerkId: { String, required: true, unique: true },
-  username: { String, required: true, unique: true },
-  email: { String, required: true, unique: true },
-  firstName: { String },
-  lastName: { String },
-  photo: { String, required: true },
-  planId: { Number, default: 1 },
-  creditBalance: { Number, default: 10 },
+  clerkId: { type: String, required: true, unique: true },
+  username: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true },
+  firstName: { type: String },
+  lastName: { type: String },
+  photo: { type: String, required: true },
+  planId: { type: Number, default: 1 },
+  creditBalance: { type: Number, default: 10 },
 });
 
 const User = models?.User || model("User", userSchema);
