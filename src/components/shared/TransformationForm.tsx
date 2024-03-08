@@ -29,6 +29,9 @@ import {
 } from "@/constants";
 import { CustomField } from "./customField";
 import { AspectRatioKey, debounce, deepMergeObjects } from "@/lib/utils";
+import MediaUploader from "./MediaUploader";
+import TransformedImage from "./TransformedImage";
+import { updateCredits } from "@/lib/actions/user.actions";
 
 export const formSchema = z.object({
   title: z.string(),
@@ -47,7 +50,7 @@ const TransformationForm = ({
   config = null,
 }: TransformationFormProps) => {
   const transformationType = transformationTypes[type];
-  const [Image, setImage] = useState(data);
+  const [image, setImage] = useState(data);
   const [newTransformation, setNewTransformation] =
     useState<Transformations | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -112,7 +115,7 @@ const TransformationForm = ({
     }, 1000);
   };
 
-  // ToDo: Return to updateCredits
+  // ToDo: Update credit Fee to something more dynamic
   const onTransformHandler = async () => {
     setIsTransforming(true);
 
@@ -123,7 +126,7 @@ const TransformationForm = ({
     setNewTransformation(null);
 
     startTransition(async () => {
-      //   await updateCredits(userId, creditFee);
+      await updateCredits(userId, -1);
     });
   };
 
@@ -213,6 +216,31 @@ const TransformationForm = ({
             )}
           </div>
         )}
+
+        <div className="media-uploader-field">
+          <CustomField
+            control={form.control}
+            name="publicId"
+            className="flex size-full flex-col"
+            render={({ field }) => (
+              <MediaUploader
+                onValueChange={field.onChange}
+                setImage={setImage}
+                publicId={field.value}
+                image={image}
+                type={type}
+              />
+            )}
+          />
+          <TransformedImage
+            image={image}
+            type={type}
+            title={form.getValues("title")}
+            isTransforming={isTransforming}
+            setIsTransforming={setIsTransforming}
+            transformationConfig={transformationConfig}
+          />
+        </div>
 
         <div className="flex flex-col gap-4">
           <Button
