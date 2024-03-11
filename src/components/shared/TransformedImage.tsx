@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { dataUrl, getImageSize } from "@/lib/utils";
+import { dataUrl, debounce, getImageSize } from "@/lib/utils";
 import { PlaceholderValue } from "next/dist/shared/lib/get-img-props";
 import { CldImage } from "next-cloudinary";
 
@@ -46,9 +46,20 @@ const TransformedImage = ({
             onError={() => {
               debounce(() => {
                 setIsTransforming && setIsTransforming(false);
-              }, 5000);
+              }, 8000);
             }}
+            {...transformationConfig}
           />
+          {isTransforming && (
+            <div className="transforming-loader">
+              <Image
+                src="/assets/icons/spinner.svg"
+                alt="Transforming"
+                width={50}
+                height={50}
+              />
+            </div>
+          )}
         </div>
       ) : (
         <div className="transformed-placeholder">Transformed image</div>
